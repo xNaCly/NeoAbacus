@@ -10,6 +10,7 @@ FLAGS = -fdiagnostics-color=always  \
 							 -Werror \
 							 -Wshadow \
 							 -Wundef \
+							 -lm \
 							 -fno-common
 
 BUILD_DIR = ./out
