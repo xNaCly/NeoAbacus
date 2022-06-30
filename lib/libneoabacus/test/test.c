@@ -20,6 +20,8 @@
 #include <math.h>
 
 #include "../src/matrix.h"
+#include "../src/basic.h"
+#include "../src/equation.h"
 
 int fail_t = 0;
 int success_t = 0;
@@ -44,6 +46,16 @@ void t_assert(int condition, char* message){
 //    t_assert(0 == 0, "0 == 0 check");
 //    t_assert(0 > 0, "0 > 0 check");
 //}
+
+void t_equ(){
+    double *roots = eq_roots(5, -3, 0, 0, 0);
+    t_assert(t_is_equal(-.6, roots[0]), "getting root of a linear equation");
+    free(roots);
+}
+
+void t_basic(){
+    t_assert(t_is_equal(3, root(27, 3)), "calculate the 3d root of 12");
+}
 
 void t_matrix(){
     Vector *v = vec_create(3);
@@ -86,7 +98,10 @@ int main(void){
     printf("running tests\n");
     // add new tests here:
     // t_example();
+
     t_matrix();
+    t_basic();
+    t_equ();
 
     end(begin);
 
