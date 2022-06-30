@@ -49,8 +49,11 @@ void t_assert(int condition, char* message){
 
 void t_equ(){
     double *roots = eq_roots(5, -3, 0, 0, 0);
+    double *roots1 = eq_roots(2, -8, 6, 0, 0);
     t_assert(t_is_equal(-.6, roots[0]), "getting root of a linear equation");
+    t_assert(t_is_equal(3.0, roots1[1]) && t_is_equal(1.0, roots1[0]), "getting roots of a quadratic equation");
     free(roots);
+    free(roots1);
 }
 
 void t_basic(){
