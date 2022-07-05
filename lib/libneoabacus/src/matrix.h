@@ -7,6 +7,8 @@ typedef struct {
     int size_y;
 } Matrix;
 
+void print_mtrx(Matrix *m);
+
 Matrix* mtrx_create(int size_x, int size_y, double** values);
 
 void mtrx_destroy(Matrix *m);

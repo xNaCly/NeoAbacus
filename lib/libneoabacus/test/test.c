@@ -73,10 +73,12 @@ void t_matrix(){
     Matrix *m1 = mtrx_create(2, 2, values);
     Matrix *m2 = mtrx_add(m, m1);
     Matrix *m3 = mtrx_sub(m, m1);
+    Matrix *m4 = mtrx_mult_mtrx(m, m1);
 
     double t = mtrx_trace(m);
-    double a = mtrx_angle(m, m2);
-    printf("%f\n", a);
+    /* double _t = mtrx_trace(m4); */
+    /* double a = mtrx_angle(m, m2); */
+    /* printf("%f\n", _t); */
 
     for(int i = 0; i < 2; i++) free(values[i]);
     free(values);
@@ -89,6 +91,7 @@ void t_matrix(){
     mtrx_destroy(m1);
     mtrx_destroy(m2);
     mtrx_destroy(m3);
+    mtrx_destroy(m4);
 }
 
 void end(clock_t begin){

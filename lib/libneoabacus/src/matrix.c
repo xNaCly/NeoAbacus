@@ -5,6 +5,16 @@
 #include "matrix.h"
 #include "util.h"
 
+void print_mtrx(Matrix *m){
+    printf("%dx%d\n", m->size_x, m->size_y);
+    for(int i = 0; i < m->size_x; i++){
+        for(int j = 0; j < m->size_y; j++){
+            printf("%s%.2f|",j == 0 ? "|" : "", m->values[i][j]);
+        }
+        printf("\n");
+    }
+}
+
 Matrix* __mtrx_create(int size_x, int size_y){
     Matrix *m;
     m = (Matrix *)malloc(sizeof(Matrix));
@@ -86,6 +96,31 @@ Matrix* mtrx_mult_fctr(Matrix *m, double factor){
     return _m;
 }
 
+// TODO: implement
+Matrix* mtrx_mult_mtrx(Matrix *m, Matrix *m1){
+    print_mtrx(m);
+    printf("\n");
+    print_mtrx(m1);
+    printf("\n");
+    if(m->size_x != m1->size_y) return NULL;
+    Matrix *_m = __mtrx_create(m1->size_x, m->size_y);
+
+    for(int i = 0; i < _m->size_y; i++){
+        for(int j = 0; j < _m->size_x; j++){
+            double t = 0;
+            for(int a = 0; a < m->size_x; a++){
+                for(int b = 0; b < m->size_y; b++){
+                }
+            }
+            _m->values[i][j] = t;
+        }
+    }
+
+    print_mtrx(_m);
+    return _m;
+}
+
+
 double mtrx_trace(Matrix *m){
     double t = 0;
     for(int i = 0; i < m->size_x; i++){
@@ -94,47 +129,6 @@ double mtrx_trace(Matrix *m){
         }
     }
     return t;
-}
-
-// TODO: implement
-// WARNING: DRAFT
-//
-// Like so:
-//
-//       2 1
-//       1 2
-//       2 1
-// 1 2 3 x x
-// 3 1 1 x x
-//
-// x_11 = 1*2 + 2*1 + 3*2 = 10
-// x_12 = 1*1 + 2*2 + 3*1 = 8
-// x_21 = 3*2 + 1*1 + 1*2 = 9
-// x_22 = 3*1 + 1*2 + 1*1 = 6
-//
-//       2  1
-//       1  2
-//       2  1
-// 1 2 3 10 8
-// 3 1 1 9  6
-//
-Matrix* mtrx_mult_mtrx(Matrix *m, Matrix *m1){
-    if(m->size_x != m1->size_y) return NULL;
-    Matrix *_m = __mtrx_create(m1->size_x, m->size_y);
-    return _m;
-    //for(int i = 0; i < _m->size_y; i++){
-    //    for(int j = 0; j < _m->size_x; j++){
-    //        double l = 0;
-    //        double r = 0;
-    //        for(int x = 0; x < m->size_x; x++){
-    //            l += m->values[i][x];
-    //        }
-    //        for(int y = 0; y < m1->size_y; y++){
-    //            r += m->values[i][y];
-    //        }
-    //    }
-    //}
-    //return _m;
 }
 
 /*
