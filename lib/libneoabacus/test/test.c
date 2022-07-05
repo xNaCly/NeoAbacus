@@ -61,26 +61,34 @@ void t_basic(){
 }
 
 void t_matrix(){
-    Vector *v = vec_create(3);
-    Vector *v1 = vec_create(3);
-    Vector *v2 = vec_add(v, v1);
-    for(int i = 0; i < v->size; i++){
-        v->values[i] = 2;
-        v1->values[i] = 2;
+    double** values = malloc(sizeof(double)*2);
+    for(int i = 0; i < 2; i++){
+        values[i] = malloc(sizeof(double)*2);
+        for(int j = 0; j < 3; j++){
+            values[i][j] = 2;
+        }
     }
-    double l = vec_len(v);
-    double l1 = vec_len(v);
-    double a = vec_angle(v, v2);
-    double s = vec_scalar_prod(v, v1);
 
-    t_assert(t_is_equal(3.464102, l) && t_is_equal(3.464102, l1), "calculate vector length");
-    t_assert(v2 != NULL && t_is_equal(vec_len(v2), 6.928203), "add two vectors together");
-    t_assert(t_is_equal(a, 90.002654), "calculate angle between two vectors");
-    t_assert(t_is_equal(s, 12.0), "calculate scalar of two vectors");
+    Matrix *m = mtrx_create(2, 2, values);
+    Matrix *m1 = mtrx_create(2, 2, values);
+    Matrix *m2 = mtrx_add(m, m1);
+    Matrix *m3 = mtrx_sub(m, m1);
 
-    vec_destroy(v);
-    vec_destroy(v1);
-    vec_destroy(v2);
+    double t = mtrx_trace(m);
+    double a = mtrx_angle(m, m2);
+    printf("%f\n", a);
+
+    for(int i = 0; i < 2; i++) free(values[i]);
+    free(values);
+
+    t_assert(t_is_equal(m2->values[0][0], 4) && t_is_equal(m2->values[0][1], 4) && t_is_equal(m2->values[1][0], 4) && t_is_equal(m2->values[1][1], 4), "adding matrices test");
+    t_assert(t_is_equal(m3->values[0][0], 0) && t_is_equal(m3->values[0][1], 0) && t_is_equal(m3->values[1][0], 0) && t_is_equal(m3->values[1][1], 0), "subtracting matrices test");
+    t_assert(t_is_equal(t, 4), "trace matrix test");
+
+    mtrx_destroy(m);
+    mtrx_destroy(m1);
+    mtrx_destroy(m2);
+    mtrx_destroy(m3);
 }
 
 void end(clock_t begin){

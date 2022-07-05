@@ -2,6 +2,8 @@
 #define EQUATION_H
 
 /**
+ * TODO: currently only supports linear and quadratic equations
+ *
  * get roots for equations up with up to 5 variables
  * this method assumes the equation to be formated in the following way:
  * 0 = ax+bx+cx+dx+e

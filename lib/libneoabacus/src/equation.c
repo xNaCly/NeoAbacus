@@ -3,6 +3,7 @@
 #include <math.h>
 
 #include "basic.h"
+#include "util.h"
 
 double* eq_roots(double a, double b, double c, double d, double e){
     double *roots = malloc(sizeof(double)*5);

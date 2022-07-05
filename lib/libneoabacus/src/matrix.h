@@ -2,26 +2,30 @@
 #define MATRIX_H
 
 typedef struct {
-    double* values;
-    int size;
-} Vector;
+    double** values;
+    int size_x;
+    int size_y;
+} Matrix;
 
-Vector* vec_create(int size);
+Matrix* mtrx_create(int size_x, int size_y, double** values);
 
-void vec_destroy(Vector *v);
+void mtrx_destroy(Matrix *m);
 
-double vec_len(Vector *v);
+double vec_len(Matrix *v);
 
-Vector* vec_add(Vector *v, Vector *v1);
+Matrix* mtrx_add(Matrix *m, Matrix *m1);
 
-Vector* vec_sub(Vector *v, Vector *v1);
+Matrix* mtrx_sub(Matrix *m, Matrix *m1);
 
-Vector* vec_mult(Vector *v, double factor);
+Matrix* mtrx_mult_fctr(Matrix *m, double factor);
+Matrix* mtrx_mult_mtrx(Matrix *m, Matrix *m1);
 
-double vec_scalar_prod(Vector *v, Vector *v1);
+double mtrx_scalar_prod(Matrix *m, Matrix *m1);
 
-double vec_angle(Vector *v, Vector *v1);
+double mtrx_angle(Matrix *m, Matrix *m1);
 
-double vec_triple_prod(Vector *v, Vector *v1, Vector *v2);
+double vec_triple_prod(Matrix *m, Matrix *m1, Matrix *m2);
+
+double mtrx_trace(Matrix *m);
 
 #endif

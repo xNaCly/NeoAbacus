@@ -20,6 +20,7 @@ LIB = ./lib/libneoabacus
 LIB_FILES = $(shell find $(LIB)/src -name "*.c")
 COMP = $(FLAGS) -o $(BUILD_DIR)/$(OUT_NAME)
 
+
 # all: build/lib
 # 	$(BUILD_DIR)/$(OUT_NAME)
 
@@ -32,3 +33,6 @@ build/lib: pre
 
 pre:
 	mkdir -p $(BUILD_DIR)
+
+overview:
+	@printf "test/lib build/lib pre"
