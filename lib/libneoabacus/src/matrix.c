@@ -5,13 +5,53 @@
 #include "matrix.h"
 #include "util.h"
 
+/*
+ *
+ * pretty prints matrices in the following way:
+ *
+ *  4x1: 
+ *  ┌────┬────┬────┬────┐
+ *  │0.00│1.00│2.00│3.00│
+ *  └────┴────┴────┴────┘
+ *
+ *  2x2: 
+ *  ┌────┬────┐
+ *  │2.00│2.00│
+ *  │2.00│2.00│
+ *  └────┴────┘
+ *
+ *  3x3: 
+ *  ┌────┬────┬────┐
+ *  │2.00│2.00│2.00│
+ *  │2.00│2.00│2.00│
+ *  │2.00│2.00│2.00│
+ *  └────┴────┴────┘
+ *
+ */
 void print_mtrx(Matrix *m){
-    printf("%dx%d\n", m->size_x, m->size_y);
+    printf("%dx%d: \n", m->size_x, m->size_y);
+
+    for(int i = 0; i < m->size_x; i++){
+        if(i == 0) printf("┌────");
+        else printf("┬────");
+        if(i == m->size_x-1) printf("┐\n");
+    }
+
+    if(m->size_y == 1) printf("│");
+
     for(int i = 0; i < m->size_x; i++){
         for(int j = 0; j < m->size_y; j++){
-            printf("%s%.2f|",j == 0 ? "|" : "", m->values[i][j]);
+            printf("%s%.2f│", j == 0 && m->size_y != 1 ? "│": "", m->values[i][j]);
         }
-        printf("\n");
+        if(m->size_y != 1) printf("\n");
+    }
+
+    if(m->size_y == 1) printf("\n");
+
+    for(int i = 0; i < m->size_x; i++){
+        if(i == 0) printf("└────");
+        else printf("┴────");
+        if(i == m->size_x-1) printf("┘\n");
     }
 }
 
@@ -98,25 +138,33 @@ Matrix* mtrx_mult_fctr(Matrix *m, double factor){
 
 // TODO: implement
 Matrix* mtrx_mult_mtrx(Matrix *m, Matrix *m1){
-    print_mtrx(m);
-    printf("\n");
-    print_mtrx(m1);
-    printf("\n");
+    // can only multiply matrices in which m has the exact same amount of colums as m1 amount of rows
     if(m->size_x != m1->size_y) return NULL;
+    // row vector * column vector
+    else if(m->size_y == 0 && m1->size_x == 0){
+        Matrix *_m = __mtrx_create(1, 1);
+        double s = 0;
+        for(int i = 0; i < m->size_x; i++){
+            for(int j = 0; j < m1->size_y; j++){
+                s += m->values[i][0] * m1->values[0][j];
+            }
+        }
+        _m->values[0][0] = s;
+        return _m;
+    }
+
     Matrix *_m = __mtrx_create(m1->size_x, m->size_y);
 
     for(int i = 0; i < _m->size_y; i++){
         for(int j = 0; j < _m->size_x; j++){
-            double t = 0;
             for(int a = 0; a < m->size_x; a++){
                 for(int b = 0; b < m->size_y; b++){
+
                 }
             }
-            _m->values[i][j] = t;
         }
     }
 
-    print_mtrx(_m);
     return _m;
 }
 
