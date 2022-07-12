@@ -3,7 +3,7 @@ mod test {
     use libneoabacus::matrix::{create_matrix, Matrix};
 
     #[test]
-    fn test_matrix_1() {
+    fn test_matrix_create() {
         let m: Matrix = create_matrix(vec![vec![2.0, 2.0], vec![2.0, 2.0]]).unwrap();
         assert!(
             m.height == 2 && m.width == 2,
@@ -11,7 +11,7 @@ mod test {
         );
     }
     #[test]
-    fn test_matrix_2() {
+    fn test_matrix_create_fail() {
         let m = create_matrix(vec![]);
         assert!(
             m.is_none(),
@@ -20,7 +20,7 @@ mod test {
     }
 
     #[test]
-    fn test_matrix_3() {
+    fn test_matrix_trace() {
         let m: Matrix = create_matrix(vec![
             vec![3.0, 3.0, 3.0],
             vec![3.0, 3.0, 3.0],
@@ -31,7 +31,7 @@ mod test {
     }
 
     #[test]
-    fn test_matrix_4() {
+    fn test_matrix_add() {
         let m0: Matrix = create_matrix(vec![
             vec![2.0, 4.0, 6.0],
             vec![2.0, 4.0, 6.0],
@@ -45,6 +45,24 @@ mod test {
         ])
         .unwrap();
         let m1 = m.add(m.clone());
+        assert!(m1 == m0);
+    }
+
+    #[test]
+    fn test_matrix_sub() {
+        let m0: Matrix = create_matrix(vec![
+            vec![0.0, 0.0, 0.0],
+            vec![0.0, 0.0, 0.0],
+            vec![0.0, 0.0, 0.0],
+        ])
+        .unwrap();
+        let m: Matrix = create_matrix(vec![
+            vec![1.0, 2.0, 3.0],
+            vec![1.0, 2.0, 3.0],
+            vec![1.0, 2.0, 3.0],
+        ])
+        .unwrap();
+        let m1 = m.sub(m.clone());
         assert!(m1 == m0);
     }
 }

@@ -116,6 +116,17 @@ impl Matrix {
         return _m;
     }
 
+    pub fn sub(&self, m: Matrix) -> Matrix {
+        let mut _m = create_matrix(m.values.clone())
+            .expect("creating new matrix to contain subtraction failed");
+        for i in 0..self.width {
+            for j in 0..self.height {
+                _m.values[i][j] = self.values[i][j] - m.values[i][j];
+            }
+        }
+        return _m;
+    }
+
     pub fn clone(&self) -> Matrix {
         return create_matrix(self.values.clone()).unwrap();
     }
