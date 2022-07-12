@@ -16,6 +16,10 @@ pub fn solve(a: f64, b: f64, c: f64) -> Option<Vec<f64>> {
     // assign all values NaN values
     let mut roots: Vec<f64> = vec![f64::NAN, f64::NAN, f64::NAN];
     if a != 0.0 && b != 0.0 && c != 0.0 {
+        let t0: f64 = b * (-1.0) - f64::sqrt(f64::powf(b, 2.0) - (4.0 * a * c));
+        let t1: f64 = b * (-1.0) + f64::sqrt(f64::powf(b, 2.0) - (4.0 * a * c));
+        roots[0] = t0 / (2.0 * a);
+        roots[1] = t1 / (2.0 * a);
     } else if a != 0.0 && b != 0.0 {
         roots[0] = b * (-1.0) / a;
     } else {
@@ -23,13 +27,4 @@ pub fn solve(a: f64, b: f64, c: f64) -> Option<Vec<f64>> {
         return None;
     }
     return Some(roots);
-}
-
-#[cfg(test)]
-mod test {
-    #[test]
-    fn t_solve() {
-        let r = crate::equation::solve(0.0, 0.0, 0.0).unwrap();
-        assert_eq!(r[0], 0.6);
-    }
 }
