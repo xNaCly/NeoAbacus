@@ -1,22 +1,135 @@
-enum TokenKind {
-    Add,
+#[derive(Debug, PartialEq, Eq)]
+pub enum TokenKind {
+    Int, // always f64
+    Sin,
+    Cos,
+    Mul,
     Sub,
-    Mult,
-    Div
+    Add,
+    Div,
+    Pow,
+    Root,
+    Empty,
 }
-
-struct Token {
-    value: String,
+pub struct Token {
     kind: TokenKind,
+    value: Option<f64>,
 }
 
-pub fn parse(s: &str) -> Vec<String>{
-    let n_str = s.replace("\n", "");
-    let mut v: Vec<String> = Vec::new();
+impl ToString for Token {
+    fn to_string(&self) -> String {
+        return format!(
+            "[TokenKind::{:?}, {}]",
+            self.kind,
+            match self.value {
+                Some(x) => x.to_string(),
+                None => String::new(),
+            }
+        );
+    }
+}
 
-    for i in n_str.split("") {
-        v.push(i.to_string());
+fn parse_ints(s: &str) -> Token {
+    let mut t = Token {
+        value: None,
+        kind: TokenKind::Empty,
+    };
+    match s.parse::<f64>() {
+        Ok(f) => {
+            t.value = Some(f);
+            t.kind = TokenKind::Int;
+        }
+        Err(_) => {
+            t.kind = TokenKind::Empty;
+            t.value = None;
+        }
+    }
+    return t;
+}
+
+pub fn parse(str: String) -> Vec<Token> {
+    let mut tokens: Vec<Token> = Vec::new();
+    let mut new_str = str.clone();
+    new_str = new_str.trim().to_string();
+    let str_split: Vec<&str> = new_str.split("").collect();
+
+    let mut temp = String::new();
+    for (index, &i) in str_split.iter().enumerate() {
+        if !temp.is_empty() && index == str_split.len() - 1 {
+            tokens.push(parse_ints(&temp));
+        }
+        if i.is_empty() || i == " " {
+            continue;
+        }
+        let mut t = Token {
+            kind: TokenKind::Empty,
+            value: None,
+        };
+        match i {
+            "+" => {
+                if !temp.is_empty() {
+                    tokens.push(parse_ints(&temp));
+                    temp.clear()
+                }
+                t.kind = TokenKind::Add;
+            }
+            "-" => {
+                if !temp.is_empty() {
+                    tokens.push(parse_ints(&temp));
+                    temp.clear()
+                }
+                t.kind = TokenKind::Sub
+            }
+            "*" => {
+                if !temp.is_empty() {
+                    tokens.push(parse_ints(&temp));
+                    temp.clear()
+                }
+                t.kind = TokenKind::Mul;
+            }
+            "/" => {
+                if !temp.is_empty() {
+                    tokens.push(parse_ints(&temp));
+                    temp.clear()
+                }
+                t.kind = TokenKind::Div
+            }
+            "^" => {
+                if !temp.is_empty() {
+                    tokens.push(parse_ints(&temp));
+                    temp.clear()
+                }
+                t.kind = TokenKind::Pow
+            }
+            _ => {
+                temp.push_str(i);
+                continue;
+            }
+        }
+        tokens.push(t);
+    }
+    return tokens;
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_parse_addition_single_char_ints() {
+        let i = "2+1";
+        let r = parse(i.to_string());
+        assert_eq!(r[0].value.unwrap(), 2.0);
+        assert!(r[1].kind == TokenKind::Add);
+        assert_eq!(r[2].value.unwrap(), 1.0);
     }
 
-    return v;
+    #[test]
+    fn test_parse_addition_multi_char_ints() {
+        let i = "20+11";
+        let r = parse(i.to_string());
+        assert_eq!(r[0].value.unwrap(), 20.0);
+        assert!(r[1].kind == TokenKind::Add);
+        assert_eq!(r[2].value.unwrap(), 11.0);
+    }
 }
