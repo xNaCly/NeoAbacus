@@ -6,3 +6,4 @@ edition = "2021"
 [dependencies]
 # interal crate, handles the math
 libneoabacus = { path = "libneoabacus" }
+regex = "1.6.0"

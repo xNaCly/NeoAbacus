@@ -1,3 +1,5 @@
+use regex::*;
+
 #[derive(Debug, PartialEq, Eq)]
 pub enum TokenKind {
     Int, // always f64
@@ -9,19 +11,25 @@ pub enum TokenKind {
     Div,
     Pow,
     Root,
+    Var, // variables such as x, y, z
     Empty,
 }
 pub struct Token {
     kind: TokenKind,
     value: Option<f64>,
+    name: Option<String>,
 }
 
 impl ToString for Token {
     fn to_string(&self) -> String {
         return format!(
-            "[TokenKind::{:?}, {}]",
+            "[TokenKind::{:?}, {}, {}]",
             self.kind,
             match self.value {
+                Some(x) => x.to_string(),
+                None => String::new(),
+            },
+            match &self.name {
                 Some(x) => x.to_string(),
                 None => String::new(),
             }
@@ -33,6 +41,7 @@ fn parse_ints(s: &str) -> Token {
     let mut t = Token {
         value: None,
         kind: TokenKind::Empty,
+        name: None,
     };
     match s.parse::<f64>() {
         Ok(f) => {
@@ -48,6 +57,8 @@ fn parse_ints(s: &str) -> Token {
 }
 
 pub fn parse(str: String) -> Vec<Token> {
+    let var_regex: Regex = Regex::new(r"([a-z])").expect("invalid regex");
+    let int_regex: Regex = Regex::new(r"([0-9])").expect("invalid regex");
     let mut tokens: Vec<Token> = Vec::new();
     let mut new_str = str.clone();
     new_str = new_str.trim().to_string();
@@ -58,13 +69,17 @@ pub fn parse(str: String) -> Vec<Token> {
         if !temp.is_empty() && index == str_split.len() - 1 {
             tokens.push(parse_ints(&temp));
         }
+
         if i.is_empty() || i == " " {
             continue;
         }
+
         let mut t = Token {
             kind: TokenKind::Empty,
             value: None,
+            name: None,
         };
+
         match i {
             "+" => {
                 if !temp.is_empty() {
@@ -102,7 +117,24 @@ pub fn parse(str: String) -> Vec<Token> {
                 t.kind = TokenKind::Pow
             }
             _ => {
-                temp.push_str(i);
+                /* if i is integer append it to the temp string
+                  else if i is a variable:
+                    if temp string has content, push all numbers, afterwars clear string
+                    push variable token
+                */
+                if int_regex.is_match(i) {
+                    temp.push_str(i);
+                } else if var_regex.is_match(i) {
+                    if !temp.is_empty() {
+                        tokens.push(parse_ints(&temp));
+                        temp.clear();
+                    }
+                    tokens.push(Token {
+                        kind: TokenKind::Var,
+                        value: None,
+                        name: Some(i.to_string()),
+                    });
+                }
                 continue;
             }
         }
