@@ -26,8 +26,8 @@ impl ToString for Token {
             "[TokenKind::{:?}, {}, {}]",
             self.kind,
             match self.value {
-                Some(x) => x.to_string(),
-                None => String::new(),
+                Some(x) => x,
+                None => f64::NAN,
             },
             match &self.name {
                 Some(x) => x.to_string(),
@@ -58,7 +58,7 @@ fn parse_ints(s: &str) -> Token {
 
 pub fn parse(str: String) -> Vec<Token> {
     let var_regex: Regex = Regex::new(r"([a-z])").expect("invalid regex");
-    let int_regex: Regex = Regex::new(r"([0-9])").expect("invalid regex");
+    let int_regex: Regex = Regex::new(r"([0-9]|\.)").expect("invalid regex");
     let mut tokens: Vec<Token> = Vec::new();
     let mut new_str = str.clone();
     new_str = new_str.trim().to_string();
