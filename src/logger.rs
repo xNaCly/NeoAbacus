@@ -1,15 +1,48 @@
+/**
+Prints given argument list prefixed with "\[LOG\]"
+
+```
+log!("i", "am", "a", "log", 1, 2, 3); // prints: [LOG] i am a log 1 2 3
+```
+*/
 macro_rules! log {
-    ($($arg:tt)*) => {
-      println!("[LOG] {}", $($arg)*);
-    };
+    ($($arg:expr),*) => {{
+      print!("[LOG] ");
+      $(
+        print!("{} ", $arg);
+      )*
+      println!();
+    }};
 }
+/**
+Prints given argument list prefixed with "\[DEBUG\]"
+
+```
+debug!("i", "am", "a", "log", 1, 2, 3);
+```
+*/
 macro_rules! debug {
-    ($($arg:tt)*) => {
-      println!("[DEBUG] {}", $($arg)*);
-    };
+    ($($arg:expr),*) => {{
+      print!("[DEBUG] ");
+      $(
+        print!("{} ", $arg);
+      )*
+      println!();
+    }};
 }
+/**
+Prints given argument list prefixed with "\[ERR\]"
+
+```
+err!("i", "am", "a", "log", 1, 2, 3);
+```
+*/
 macro_rules! err {
-    ($($arg:tt)*) => {
-      println!("[Err] {}", $($arg)*);
-    };
+    ($($arg:expr),*) => {{
+      print!("[ERR] ");
+      $(
+        print!("{} ", $arg);
+      )*
+      println!();
+    }};
 }

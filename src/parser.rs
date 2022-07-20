@@ -2,21 +2,40 @@ use regex::*;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum TokenKind {
-    Int, // always f64
+    /// All integers are internally of type f64
+    Int,
+    /// Sinus type
     Sin,
+    /// Cosinus type
     Cos,
+    /// Multiplication
     Mul,
+    /// Subtraction
     Sub,
+    /// Addition
     Add,
+    /// Division
     Div,
+    /// Power (x^n)
     Pow,
+    /// Root such as square root
     Root,
-    Var, // variables such as x, y, z
+    /// Variables such as x, y, z
+    Var,
+    /// Bracket '('
+    BracketOpen,
+    /// Bracket ')'
+    BracketClose,
+    /// Placeholder
     Empty,
 }
+/// Token representation
+#[derive(Debug)]
 pub struct Token {
     kind: TokenKind,
+    /// holds the value of the token if its of type [TokenKind::Int]
     value: Option<f64>,
+    /// only intended for variables to store their names, eg. x,y,z
     name: Option<String>,
 }
 
@@ -37,6 +56,8 @@ impl ToString for Token {
     }
 }
 
+/// parses given string to the respective float representation
+/// returns a Token
 fn parse_ints(s: &str) -> Token {
     let mut t = Token {
         value: None,
@@ -56,6 +77,81 @@ fn parse_ints(s: &str) -> Token {
     return t;
 }
 
+/// takes a string and tries to return a vector of tokens parsed from the given string
+///
+/// currently supports all enum values in [TokenKind] except sin and cos.
+///
+/// I/O - Examples:
+/// ```
+/// parse("2+1");
+/// // [
+/// //    Token {
+/// //        kind: Int,
+/// //        value: Some(
+/// //            2.0,
+/// //        ),
+/// //        name: None,
+/// //    },
+/// //    Token {
+/// //        kind: Add,
+/// //        value: None,
+/// //        name: None,
+/// //    },
+/// //    Token {
+/// //        kind: Int,
+/// //        value: Some(
+/// //            1.0,
+/// //        ),
+/// //        name: None,
+/// //    },
+/// // ]
+/// parse("525*0.13-123.09/250009");
+/// //[
+/// //    Token {
+/// //        kind: Int,
+/// //        value: Some(
+/// //            525.0,
+/// //        ),
+/// //        name: None,
+/// //    },
+/// //    Token {
+/// //        kind: Mul,
+/// //        value: None,
+/// //        name: None,
+/// //    },
+/// //    Token {
+/// //        kind: Int,
+/// //        value: Some(
+/// //            0.13,
+/// //        ),
+/// //        name: None,
+/// //    },
+/// //    Token {
+/// //        kind: Sub,
+/// //        value: None,
+/// //        name: None,
+/// //    },
+/// //    Token {
+/// //        kind: Int,
+/// //        value: Some(
+/// //            123.09,
+/// //        ),
+/// //        name: None,
+/// //    },
+/// //    Token {
+/// //        kind: Div,
+/// //        value: None,
+/// //        name: None,
+/// //    },
+/// //    Token {
+/// //        kind: Int,
+/// //        value: Some(
+/// //            250009.0,
+/// //        ),
+/// //        name: None,
+/// //    },
+/// //]
+/// ```
 pub fn parse(str: String) -> Vec<Token> {
     let var_regex: Regex = Regex::new(r"([a-z])").expect("invalid regex");
     let int_regex: Regex = Regex::new(r"([0-9]|\.)").expect("invalid regex");
@@ -66,6 +162,7 @@ pub fn parse(str: String) -> Vec<Token> {
 
     let mut temp = String::new();
     for (index, &i) in str_split.iter().enumerate() {
+        // if no more symbols available in string, push remaning numbers parsed into token vector
         if !temp.is_empty() && index == str_split.len() - 1 {
             tokens.push(parse_ints(&temp));
         }
@@ -81,6 +178,20 @@ pub fn parse(str: String) -> Vec<Token> {
         };
 
         match i {
+            "(" => {
+                if !temp.is_empty() {
+                    tokens.push(parse_ints(&temp));
+                    temp.clear()
+                }
+                t.kind = TokenKind::BracketOpen;
+            }
+            ")" => {
+                if !temp.is_empty() {
+                    tokens.push(parse_ints(&temp));
+                    temp.clear()
+                }
+                t.kind = TokenKind::BracketClose;
+            }
             "+" => {
                 if !temp.is_empty() {
                     tokens.push(parse_ints(&temp));

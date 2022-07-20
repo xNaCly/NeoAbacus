@@ -20,9 +20,7 @@ pub fn shell() {
             exit(0);
         } else {
             let instructions: Vec<Token> = parse(cmd);
-            for i in instructions {
-                println!("{}", i.to_string());
-            }
+            println!("{:#?}", instructions);
         }
     }
 }
